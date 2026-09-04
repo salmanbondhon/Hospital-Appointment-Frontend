@@ -1,0 +1,451 @@
+<!-- =================================================
+     PAGE HEADER
+================================================= -->
+
+<div class="page-header">
+
+  <div>
+
+    <h1>Medical Records</h1>
+
+    <p>
+      View patient medical history
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- =================================================
+     SUCCESS MESSAGE
+================================================= -->
+
+@if (successMessage) {
+
+  <div class="alert alert-success">
+
+    {{ successMessage }}
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     ERROR MESSAGE
+================================================= -->
+
+@if (errorMessage) {
+
+  <div class="alert alert-danger">
+
+    {{ errorMessage }}
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     ADMIN / DOCTOR PATIENT SELECTOR
+================================================= -->
+
+@if (isAdmin() || isDoctor()) {
+
+  <div class="patient-selector-card">
+
+    <div class="form-group">
+
+      <label for="patient">
+
+        Select Patient
+
+      </label>
+
+
+      <select
+        id="patient"
+        [(ngModel)]="selectedPatientId"
+        (change)="onPatientChange()"
+        [disabled]="isLoadingPatients"
+      >
+
+        <option [ngValue]="0">
+
+          Select a patient
+
+        </option>
+
+
+        @for (
+          patient of patients;
+          track patient.id
+        ) {
+
+          <option
+            [ngValue]="patient.id"
+          >
+
+            {{ patient.fullName }}
+
+            -
+            
+            {{ patient.phoneNumber }}
+
+          </option>
+
+        }
+
+      </select>
+
+
+      @if (isLoadingPatients) {
+
+        <small class="info-message">
+
+          Loading patients...
+
+        </small>
+
+      }
+
+
+      @if (
+        !isLoadingPatients &&
+        patients.length === 0
+      ) {
+
+        <small class="info-message">
+
+          No patients found.
+
+        </small>
+
+      }
+
+    </div>
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     SELECTED PATIENT
+================================================= -->
+
+@if (
+  (isAdmin() || isDoctor()) &&
+  selectedPatientId > 0
+) {
+
+  <div class="selected-patient">
+
+    <i class="bi bi-person-circle"></i>
+
+    <div>
+
+      <strong>
+        Patient
+      </strong>
+
+      <span>
+        {{ getSelectedPatientName() }}
+      </span>
+
+    </div>
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     PATIENT INFORMATION
+================================================= -->
+
+@if (isPatient() && patientId) {
+
+  <div class="selected-patient">
+
+    <i class="bi bi-person-circle"></i>
+
+    <div>
+
+      <strong>
+        Medical History
+      </strong>
+
+      <span>
+        Your medical records
+      </span>
+
+    </div>
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     LOADING
+================================================= -->
+
+@if (isLoading) {
+
+  <div class="loading-container">
+
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    >
+
+      <span class="visually-hidden">
+        Loading...
+      </span>
+
+    </div>
+
+
+    <p>
+      Loading medical records...
+    </p>
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     RECORDS
+================================================= -->
+
+@if (
+  !isLoading &&
+  medicalRecords.length > 0
+) {
+
+  <div class="records-container">
+
+    @for (
+      record of medicalRecords;
+      track $index
+    ) {
+
+      <div class="record-card">
+
+        <!-- =========================================
+             RECORD HEADER
+        ========================================= -->
+
+        <div class="record-header">
+
+          <div>
+
+            <h2>
+
+              <i class="bi bi-file-medical"></i>
+
+              Medical Record
+
+            </h2>
+
+            <p>
+
+              {{ record.appointmentDate
+                | date:'dd MMM yyyy, hh:mm a'
+              }}
+
+            </p>
+
+          </div>
+
+
+          <span class="record-date">
+
+            {{ record.appointmentDate
+              | date:'dd MMM yyyy'
+            }}
+
+          </span>
+
+        </div>
+
+
+        <!-- =========================================
+             DOCTOR
+        ========================================= -->
+
+        <div class="record-section">
+
+          <div class="section-label">
+
+            <i class="bi bi-person-badge"></i>
+
+            Doctor
+
+          </div>
+
+          <div class="section-value">
+
+            {{ record.doctorName }}
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================================
+             DIAGNOSIS
+        ========================================= -->
+
+        <div class="record-section">
+
+          <div class="section-label">
+
+            <i class="bi bi-clipboard2-pulse"></i>
+
+            Diagnosis
+
+          </div>
+
+          <div class="section-value">
+
+            {{ record.diagnosis }}
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================================
+             MEDICINES
+        ========================================= -->
+
+        <div class="record-section">
+
+          <div class="section-label">
+
+            <i class="bi bi-capsule"></i>
+
+            Medicines
+
+          </div>
+
+          <div class="section-value medicine-text">
+
+            {{ record.medicines }}
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================================
+             NOTES
+        ========================================= -->
+
+        <div class="record-section">
+
+          <div class="section-label">
+
+            <i class="bi bi-journal-text"></i>
+
+            Notes
+
+          </div>
+
+          <div class="section-value notes-text">
+
+            {{ record.notes || 'No additional notes.' }}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     NO RECORD SELECTED
+================================================= -->
+
+@if (
+  !isLoading &&
+  (isAdmin() || isDoctor()) &&
+  selectedPatientId === 0
+) {
+
+  <div class="empty-message">
+
+    <i class="bi bi-person-vcard"></i>
+
+    <h3>
+      Select a Patient
+    </h3>
+
+    <p>
+      Select a patient above to view their medical history.
+    </p>
+
+  </div>
+
+}
+
+
+<!-- =================================================
+     NO MEDICAL RECORDS
+================================================= -->
+
+@if (
+  !isLoading &&
+  selectedPatientId > 0 &&
+  medicalRecords.length === 0
+) {
+
+  <div class="empty-message">
+
+    <i class="bi bi-file-medical"></i>
+
+    <h3>
+      No Medical Records
+    </h3>
+
+    <p>
+      No medical records were found for this patient.
+    </p>
+
+  </div>
+
+}
+
+
+@if (
+  !isLoading &&
+  isPatient() &&
+  patientId &&
+  medicalRecords.length === 0
+) {
+
+  <div class="empty-message">
+
+    <i class="bi bi-file-medical"></i>
+
+    <h3>
+      No Medical Records
+    </h3>
+
+    <p>
+      You do not have any medical records yet.
+    </p>
+
+  </div>
+
+}

@@ -1,0 +1,670 @@
+<div class="doctors-page">
+
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>Doctors</h1>
+
+      <p>
+
+        @if (userRole === 'Admin') {
+
+          Manage hospital doctors
+
+        } @else {
+
+          View hospital doctors
+
+        }
+
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         ADD DOCTOR
+         ADMIN ONLY
+    ========================== -->
+
+    @if (userRole === 'Admin') {
+
+      <button
+        type="button"
+        class="btn-add"
+        (click)="openAddForm()"
+      >
+
+        <i class="bi bi-plus-lg"></i>
+
+        Add Doctor
+
+      </button>
+
+    }
+
+  </div>
+
+
+
+  <!-- =========================
+       SUCCESS
+  ========================== -->
+
+  @if (successMessage) {
+
+    <div class="alert alert-success">
+
+      {{ successMessage }}
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       ERROR
+  ========================== -->
+
+  @if (errorMessage) {
+
+    <div class="alert alert-danger">
+
+      {{ errorMessage }}
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       ADD / EDIT DOCTOR FORM
+       ADMIN ONLY
+  ========================== -->
+
+  @if (userRole === 'Admin' && showForm) {
+
+    <div class="form-card">
+
+      <div class="form-header">
+
+        <h2>
+
+          {{
+            editingDoctorId
+              ? 'Edit Doctor'
+              : 'Add Doctor'
+          }}
+
+        </h2>
+
+
+        <button
+          type="button"
+          class="btn-close-form"
+          (click)="closeForm()"
+        >
+
+          <i class="bi bi-x-lg"></i>
+
+        </button>
+
+      </div>
+
+
+      <form
+        [formGroup]="doctorForm"
+        (ngSubmit)="createDoctor()"
+      >
+
+
+        <!-- =========================
+             FULL NAME
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            formControlName="fullName"
+            placeholder="Enter doctor's full name"
+          />
+
+
+          @if (
+            doctorForm.controls.fullName.touched &&
+            doctorForm.controls.fullName.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Full name is required.
+
+            </small>
+
+          }
+
+        </div>
+
+
+
+        <!-- =========================
+             SPECIALIZATION
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Specialization
+          </label>
+
+          <input
+            type="text"
+            formControlName="specialization"
+            placeholder="e.g. Cardiology"
+          />
+
+
+          @if (
+            doctorForm.controls.specialization.touched &&
+            doctorForm.controls.specialization.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Specialization is required.
+
+            </small>
+
+          }
+
+        </div>
+
+
+
+        <!-- =========================
+             QUALIFICATION
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Qualification
+          </label>
+
+          <input
+            type="text"
+            formControlName="qualification"
+            placeholder="e.g. MBBS, FCPS"
+          />
+
+        </div>
+
+
+
+        <!-- =========================
+             EXPERIENCE
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Experience (Years)
+          </label>
+
+          <input
+            type="number"
+            formControlName="experience"
+            min="0"
+          />
+
+        </div>
+
+
+
+        <!-- =========================
+             CONSULTATION FEE
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Consultation Fee
+          </label>
+
+          <input
+            type="number"
+            formControlName="consultationFee"
+            min="0"
+            step="0.01"
+          />
+
+        </div>
+
+
+
+        <!-- =========================
+             AVAILABLE FROM
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Available From
+          </label>
+
+          <input
+            type="time"
+            formControlName="availableFrom"
+          />
+
+        </div>
+
+
+
+        <!-- =========================
+             AVAILABLE TO
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Available To
+          </label>
+
+          <input
+            type="time"
+            formControlName="availableTo"
+          />
+
+        </div>
+
+
+
+        <!-- =========================
+             DEPARTMENT
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Department
+          </label>
+
+          <select
+            formControlName="departmentId"
+          >
+
+            <option [ngValue]="0">
+              Select Department
+            </option>
+
+
+            @for (
+              department of departments;
+              track department.id
+            ) {
+
+              <option
+                [ngValue]="department.id"
+              >
+
+                {{ department.name }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+
+        <!-- =========================
+             EMAIL
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Email
+          </label>
+
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="doctor@hospital.com"
+          />
+
+
+          @if (
+            doctorForm.controls.email.touched &&
+            doctorForm.controls.email.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Please enter a valid email.
+
+            </small>
+
+          }
+
+        </div>
+
+
+
+        <!-- =========================
+             PASSWORD
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Password
+          </label>
+
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Leave empty to keep current password"
+          />
+
+
+          @if (
+            doctorForm.controls.password.touched &&
+            doctorForm.controls.password.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Password must be at least 6 characters.
+
+            </small>
+
+          }
+
+        </div>
+
+
+
+        <!-- =========================
+             BUTTONS
+        ========================== -->
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="closeForm()"
+            [disabled]="isSaving"
+          >
+
+            Cancel
+
+          </button>
+
+
+          <button
+            type="submit"
+            class="btn-save"
+            [disabled]="isSaving"
+          >
+
+            @if (isSaving) {
+
+              Saving...
+
+            } @else {
+
+              {{
+                editingDoctorId
+                  ? 'Update Doctor'
+                  : 'Add Doctor'
+              }}
+
+            }
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (isLoading) {
+
+    <div class="loading-container">
+
+      <div
+        class="spinner-border text-primary"
+        role="status"
+      >
+
+        <span class="visually-hidden">
+          Loading...
+        </span>
+
+      </div>
+
+      <p>
+        Loading doctors...
+      </p>
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       TABLE
+  ========================== -->
+
+  @else {
+
+    <div class="table-card">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>
+              Doctor
+            </th>
+
+            <th>
+              Specialization
+            </th>
+
+            <th>
+              Qualification
+            </th>
+
+            <th>
+              Experience
+            </th>
+
+            <th>
+              Department
+            </th>
+
+            <th>
+              Fee
+            </th>
+
+            <th>
+              Availability
+            </th>
+
+
+            <!-- ACTIONS ONLY FOR ADMIN -->
+
+            @if (userRole === 'Admin') {
+
+              <th>
+                Actions
+              </th>
+
+            }
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            doctor of doctors;
+            track doctor.id
+          ) {
+
+            <tr>
+
+              <td>
+                {{ doctor.id }}
+              </td>
+
+
+              <td>
+
+                <strong>
+                  {{ doctor.fullName }}
+                </strong>
+
+              </td>
+
+
+              <td>
+                {{ doctor.specialization }}
+              </td>
+
+
+              <td>
+                {{ doctor.qualification || 'N/A' }}
+              </td>
+
+
+              <td>
+                {{ doctor.experience }} years
+              </td>
+
+
+              <td>
+                {{ doctor.departmentName }}
+              </td>
+
+
+              <td>
+                {{ doctor.consultationFee | currency }}
+              </td>
+
+
+              <td>
+
+                {{ doctor.availableFrom }}
+
+                -
+
+                {{ doctor.availableTo }}
+
+              </td>
+
+
+              <!-- =========================
+                   ADMIN ACTIONS
+              ========================== -->
+
+              @if (userRole === 'Admin') {
+
+                <td class="actions">
+
+
+                  <!-- EDIT -->
+
+                  <button
+                    type="button"
+                    class="btn-edit"
+                    (click)="openEditForm(doctor)"
+                  >
+
+                    <i class="bi bi-pencil"></i>
+
+                  </button>
+
+
+                  <!-- DELETE -->
+
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    (click)="deleteDoctor(doctor.id)"
+                  >
+
+                    <i class="bi bi-trash"></i>
+
+                  </button>
+
+                </td>
+
+              }
+
+            </tr>
+
+          }
+
+
+          @empty {
+
+            <tr>
+
+              <td
+                [attr.colspan]="userRole === 'Admin' ? 9 : 8"
+                class="empty-message"
+              >
+
+                No doctors found.
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</div>

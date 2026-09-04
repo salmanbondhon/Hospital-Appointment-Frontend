@@ -1,0 +1,215 @@
+.dashboard {
+  width: 100%;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dashboard-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.loading-container {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #e2e8f0;
+  transition: 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.stat-card h2 {
+  margin: 5px 0 0;
+  color: #1e293b;
+  font-size: 26px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+}
+
+.users {
+  background: #e0ecff;
+  color: #0d6efd;
+}
+
+.departments {
+  background: #e8e0ff;
+  color: #6f42c1;
+}
+
+.doctors {
+  background: #dff7f1;
+  color: #198754;
+}
+
+.patients {
+  background: #fff0d9;
+  color: #fd7e14;
+}
+
+.appointments {
+  background: #e1f1ff;
+  color: #0dcaf0;
+}
+
+.prescriptions {
+  background: #f3e5ff;
+  color: #9c36b5;
+}
+
+.leave {
+  background: #ffe1e1;
+  color: #dc3545;
+}
+
+.today {
+  background: #e0f7e9;
+  color: #20c997;
+}
+
+.section-title {
+  margin: 35px 0 15px;
+}
+
+.section-title h2 {
+  font-size: 20px;
+  color: #1e293b;
+  margin: 0;
+}
+
+.appointment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.status-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.status-card i {
+  font-size: 25px;
+}
+
+.status-card span {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.status-card strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 24px;
+}
+
+.pending i,
+.pending strong {
+  color: #fd7e14;
+}
+
+.approved i,
+.approved strong {
+  color: #0d6efd;
+}
+
+.completed i,
+.completed strong {
+  color: #198754;
+}
+
+.cancelled i,
+.cancelled strong {
+  color: #dc3545;
+}
+
+@media (max-width: 1200px) {
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .appointment-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

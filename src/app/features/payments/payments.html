@@ -1,0 +1,628 @@
+<div class="payments-page">
+
+  <!-- ================================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ================================================= -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Payments</h1>
+
+      <p>
+        Manage your appointment payments
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- LOADING -->
+  <!-- ================================================= -->
+
+  <div
+    class="loading"
+    *ngIf="isLoading">
+
+    <div class="spinner"></div>
+
+    <p>Loading payments...</p>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- ERROR -->
+  <!-- ================================================= -->
+
+  <div
+    class="message error-message"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- SUCCESS -->
+  <!-- ================================================= -->
+
+  <div
+    class="message success-message"
+    *ngIf="successMessage">
+
+    {{ successMessage }}
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- PATIENT SECTION -->
+  <!-- ================================================= -->
+
+  <div
+    class="patient-payment-section"
+    *ngIf="!isLoading && appointments.length > 0">
+
+    <h2>My Appointments</h2>
+
+    <p class="section-description">
+      Select an appointment to make a payment.
+    </p>
+
+
+    <!-- =============================================== -->
+    <!-- APPOINTMENTS -->
+    <!-- =============================================== -->
+
+    <div class="appointment-list">
+
+      <div
+        class="appointment-card"
+        *ngFor="let appointment of appointments"
+        [class.selected]="
+          selectedAppointment?.id === appointment.id
+        ">
+
+        <!-- =========================================== -->
+        <!-- APPOINTMENT INFORMATION -->
+        <!-- =========================================== -->
+
+        <div class="appointment-info">
+
+          <div class="doctor-info">
+
+            <div class="doctor-icon">
+              👨‍⚕️
+            </div>
+
+            <div>
+
+              <h3>
+                {{ appointment.doctorName }}
+              </h3>
+
+              <span class="doctor-label">
+                Doctor
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="appointment-details">
+
+            <div class="detail">
+
+              <span class="detail-label">
+                Appointment Date
+              </span>
+
+              <span class="detail-value">
+                {{ appointment.appointmentDate | date:'dd MMM yyyy, hh:mm a' }}
+              </span>
+
+            </div>
+
+
+            <div class="detail">
+
+              <span class="detail-label">
+                Problem
+              </span>
+
+              <span class="detail-value">
+                {{ appointment.problemDescription }}
+              </span>
+
+            </div>
+
+
+            <div class="detail">
+
+              <span class="detail-label">
+                Status
+              </span>
+
+              <span
+                class="status"
+                [ngClass]="{
+                  'pending': appointment.status === AppointmentStatus.Pending,
+                  'approved': appointment.status === AppointmentStatus.Approved,
+                  'completed': appointment.status === AppointmentStatus.Completed,
+                  'cancelled': appointment.status === AppointmentStatus.Cancelled
+                }">
+
+                {{
+                  appointment.status === AppointmentStatus.Pending
+                    ? 'Pending'
+                    : appointment.status === AppointmentStatus.Approved
+                      ? 'Approved'
+                      : appointment.status === AppointmentStatus.Completed
+                        ? 'Completed'
+                        : 'Cancelled'
+                }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================================== -->
+        <!-- PAYMENT INFORMATION -->
+        <!-- =========================================== -->
+
+        <div class="payment-info">
+
+          <!-- ALREADY PAID -->
+
+          <div
+            class="already-paid"
+            *ngIf="hasPayment(appointment.id)">
+
+            <div class="paid-icon">
+              ✓
+            </div>
+
+            <div>
+
+              <strong>
+                Paid
+              </strong>
+
+              <span>
+                ৳{{ getPayment(appointment.id)?.amount }}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- PAY NOW -->
+
+          <button
+            class="pay-button"
+            *ngIf="!hasPayment(appointment.id)"
+            [disabled]="
+              appointment.status === AppointmentStatus.Cancelled
+            "
+            (click)="selectAppointment(appointment)">
+
+            Pay Now
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- NO APPOINTMENTS -->
+  <!-- ================================================= -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !isLoading &&
+      appointments.length === 0
+    ">
+
+    <div class="empty-icon">
+      📅
+    </div>
+
+    <h3>
+      No appointments found
+    </h3>
+
+    <p>
+      You need an appointment before making a payment.
+    </p>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- PAYMENT FORM -->
+  <!-- ================================================= -->
+
+  <div
+    class="payment-overlay"
+    *ngIf="selectedAppointment">
+
+    <div class="payment-modal">
+
+
+      <!-- ============================================= -->
+      <!-- MODAL HEADER -->
+      <!-- ============================================= -->
+
+      <div class="modal-header">
+
+        <div>
+
+          <h2>
+            Make Payment
+          </h2>
+
+          <p>
+            Complete payment for your appointment
+          </p>
+
+        </div>
+
+
+        <button
+          class="close-button"
+          type="button"
+          (click)="closePayment()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <!-- ============================================= -->
+      <!-- APPOINTMENT SUMMARY -->
+      <!-- ============================================= -->
+
+      <div class="appointment-summary">
+
+        <div class="summary-row">
+
+          <span>
+            Doctor
+          </span>
+
+          <strong>
+            {{ selectedAppointment.doctorName }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+          <span>
+            Appointment Date
+          </span>
+
+          <strong>
+            {{
+              selectedAppointment.appointmentDate
+              | date:'dd MMM yyyy, hh:mm a'
+            }}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+          <span>
+            Appointment ID
+          </span>
+
+          <strong>
+            #{{ selectedAppointment.id }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- ============================================= -->
+      <!-- AMOUNT INFORMATION -->
+      <!-- ============================================= -->
+
+      <div class="amount-box">
+
+        <span>
+          Consultation Fee
+        </span>
+
+        <div class="amount-note">
+
+          <span>
+            Amount will be calculated by the system
+          </span>
+
+        </div>
+
+        <strong>
+          Calculated at payment
+        </strong>
+
+      </div>
+
+
+      <!-- ============================================= -->
+      <!-- PAYMENT METHOD -->
+      <!-- ============================================= -->
+
+      <div class="form-group">
+
+        <label>
+          Payment Method
+        </label>
+
+        <select
+          [(ngModel)]="selectedPaymentMethod"
+          class="payment-select">
+
+          <option
+            *ngFor="let method of paymentMethods"
+            [ngValue]="method.value">
+
+            {{ method.name }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- ============================================= -->
+      <!-- INFORMATION -->
+      <!-- ============================================= -->
+
+      <div class="payment-notice">
+
+        <span class="notice-icon">
+          ℹ
+        </span>
+
+        <p>
+          The payment amount is automatically calculated
+          from the doctor's consultation fee.
+        </p>
+
+      </div>
+
+
+      <!-- ============================================= -->
+      <!-- ACTIONS -->
+      <!-- ============================================= -->
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="isPaying"
+          (click)="closePayment()">
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="button"
+          class="confirm-button"
+          [disabled]="isPaying"
+          (click)="payNow()">
+
+          <span
+            *ngIf="isPaying"
+            class="button-spinner">
+          </span>
+
+          <span>
+            {{ isPaying ? 'Processing...' : 'Pay Now' }}
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- PAYMENT HISTORY -->
+  <!-- ================================================= -->
+
+  <div
+    class="payment-history"
+    *ngIf="
+      !isLoading &&
+      payments.length > 0
+    ">
+
+    <div class="history-header">
+
+      <div>
+
+        <h2>
+          Payment History
+        </h2>
+
+        <p>
+          Your completed payments
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              #
+            </th>
+
+            <th>
+              Doctor
+            </th>
+
+            <th>
+              Appointment
+            </th>
+
+            <th>
+              Amount
+            </th>
+
+            <th>
+              Method
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Transaction ID
+            </th>
+
+            <th>
+              Payment Date
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let payment of payments;
+              let i = index
+            ">
+
+            <td>
+              {{ i + 1 }}
+            </td>
+
+            <td>
+
+              <strong>
+                {{ payment.doctorName }}
+              </strong>
+
+            </td>
+
+            <td>
+              #{{ payment.appointmentId }}
+            </td>
+
+            <td>
+
+              <strong class="amount">
+
+                ৳{{ payment.amount }}
+
+              </strong>
+
+            </td>
+
+            <td>
+
+              {{
+                getPaymentMethodName(
+                  payment.paymentMethod
+                )
+              }}
+
+            </td>
+
+            <td>
+
+              <span
+                class="payment-status"
+                [ngClass]="{
+                  'paid': payment.status === PaymentStatus.Paid,
+                  'pending': payment.status === PaymentStatus.Pending,
+                  'failed': payment.status === PaymentStatus.Failed,
+                  'refunded': payment.status === PaymentStatus.Refunded
+                }">
+
+                {{
+                  getPaymentStatusName(
+                    payment.status
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              <span class="transaction-id">
+
+                {{ payment.transactionId }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              {{
+                payment.paymentDate
+                | date:'dd MMM yyyy, hh:mm a'
+              }}
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

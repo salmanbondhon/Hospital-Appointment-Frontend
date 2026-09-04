@@ -1,0 +1,571 @@
+<!-- =========================
+     PAGE HEADER
+========================= -->
+
+<div class="page-header">
+
+  <div>
+
+    <h1>Prescriptions</h1>
+
+    <p>
+      Manage patient prescriptions
+    </p>
+
+  </div>
+
+
+  @if (isDoctor()) {
+
+    <button
+      type="button"
+      class="btn-add"
+      (click)="openAddForm()"
+    >
+
+      <i class="bi bi-plus-lg"></i>
+
+      New Prescription
+
+    </button>
+
+  }
+
+</div>
+
+
+<!-- =========================
+     SUCCESS MESSAGE
+========================= -->
+
+@if (successMessage) {
+
+  <div class="alert alert-success">
+
+    {{ successMessage }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     ERROR MESSAGE
+========================= -->
+
+@if (errorMessage) {
+
+  <div class="alert alert-danger">
+
+    {{ errorMessage }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     CREATE / EDIT FORM
+========================= -->
+
+@if (
+  showForm &&
+  (isDoctor() || isAdmin())
+) {
+
+  <div class="form-card">
+
+    <div class="form-header">
+
+      <h2>
+
+        @if (isEditMode) {
+
+          Edit Prescription
+
+        }
+
+        @else {
+
+          Create Prescription
+
+        }
+
+      </h2>
+
+
+      <button
+        type="button"
+        class="btn-close-form"
+        (click)="closeForm()"
+      >
+
+        <i class="bi bi-x-lg"></i>
+
+      </button>
+
+    </div>
+
+
+    <form
+      [formGroup]="prescriptionForm"
+      (ngSubmit)="savePrescription()"
+    >
+
+
+      <!-- Appointment -->
+
+      @if (!isEditMode) {
+
+        <div class="form-group">
+
+          <label>
+            Completed Appointment
+          </label>
+
+
+          <select
+            formControlName="appointmentId"
+          >
+
+            <option [ngValue]="0">
+
+              Select Appointment
+
+            </option>
+
+
+            @for (
+              appointment of completedAppointments;
+              track appointment.id
+            ) {
+
+              <option
+                [ngValue]="appointment.id"
+              >
+
+                {{ appointment.patientName }}
+
+                -
+
+                {{ appointment.appointmentDate
+                  | date:'dd MMM yyyy, hh:mm a'
+                }}
+
+              </option>
+
+            }
+
+          </select>
+
+
+          @if (
+            prescriptionForm.controls.appointmentId.touched &&
+            prescriptionForm.controls.appointmentId.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Please select an appointment.
+
+            </small>
+
+          }
+
+
+          @if (
+            completedAppointments.length === 0
+          ) {
+
+            <small class="info-message">
+
+              No completed appointments are available.
+
+            </small>
+
+          }
+
+        </div>
+
+      }
+
+
+      <!-- Edit appointment information -->
+
+      @if (isEditMode) {
+
+        <div class="form-group">
+
+          <label>
+            Appointment
+          </label>
+
+          <input
+            type="text"
+            [value]="prescriptionForm.value.appointmentId"
+            disabled
+          />
+
+          <small class="info-message">
+
+            Appointment cannot be changed.
+
+          </small>
+
+        </div>
+
+      }
+
+
+      <!-- Diagnosis -->
+
+      <div class="form-group">
+
+        <label>
+          Diagnosis
+        </label>
+
+
+        <textarea
+          formControlName="diagnosis"
+          rows="3"
+          placeholder="Enter diagnosis..."
+        ></textarea>
+
+
+        @if (
+          prescriptionForm.controls.diagnosis.touched &&
+          prescriptionForm.controls.diagnosis.invalid
+        ) {
+
+          <small class="validation-error">
+
+            Diagnosis is required.
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- Medicines -->
+
+      <div class="form-group">
+
+        <label>
+          Medicines
+        </label>
+
+
+        <textarea
+          formControlName="medicines"
+          rows="5"
+          placeholder="Enter prescribed medicines..."
+        ></textarea>
+
+
+        @if (
+          prescriptionForm.controls.medicines.touched &&
+          prescriptionForm.controls.medicines.invalid
+        ) {
+
+          <small class="validation-error">
+
+            Medicines are required.
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- Notes -->
+
+      <div class="form-group">
+
+        <label>
+          Notes
+        </label>
+
+
+        <textarea
+          formControlName="notes"
+          rows="4"
+          placeholder="Additional instructions or notes..."
+        ></textarea>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="closeForm()"
+          [disabled]="isSaving"
+        >
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="isSaving"
+        >
+
+          @if (isSaving) {
+
+            Saving...
+
+          }
+
+          @else if (isEditMode) {
+
+            Update Prescription
+
+          }
+
+          @else {
+
+            Create Prescription
+
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+}
+
+
+<!-- =========================
+     LOADING
+========================= -->
+
+@if (isLoading) {
+
+  <div class="loading-container">
+
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    >
+
+      <span class="visually-hidden">
+        Loading...
+      </span>
+
+    </div>
+
+
+    <p>
+      Loading prescriptions...
+    </p>
+
+  </div>
+
+}
+
+
+<!-- =========================
+     TABLE
+========================= -->
+
+@else {
+
+  <div class="table-card">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+          <th>Doctor</th>
+
+          <th>Patient</th>
+
+          <th>Diagnosis</th>
+
+          <th>Medicines</th>
+
+          <th>Notes</th>
+
+          <th>Created At</th>
+
+
+          @if (canUpdatePrescription() ||
+               canDeletePrescription()) {
+
+            <th>Actions</th>
+
+          }
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        @for (
+          prescription of prescriptions;
+          track prescription.id
+        ) {
+
+          <tr>
+
+            <td>
+              {{ prescription.id }}
+            </td>
+
+
+            <td>
+
+              <strong>
+                {{ prescription.doctorName }}
+              </strong>
+
+            </td>
+
+
+            <td>
+              {{ prescription.patientName }}
+            </td>
+
+
+            <td>
+              {{ prescription.diagnosis }}
+            </td>
+
+
+            <td>
+
+              <span class="medicine-text">
+
+                {{ prescription.medicines }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span class="notes-text">
+
+                {{ prescription.notes || 'N/A' }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              {{ prescription.createdAt
+                | date:'dd MMM yyyy, hh:mm a'
+              }}
+
+            </td>
+
+
+            @if (
+              canUpdatePrescription() ||
+              canDeletePrescription()
+            ) {
+
+              <td>
+
+                <div class="action-buttons">
+
+
+                  @if (canUpdatePrescription()) {
+
+                    <button
+                      type="button"
+                      class="btn-edit"
+                      (click)="openEditForm(prescription)"
+                      title="Edit Prescription"
+                    >
+
+                      <i class="bi bi-pencil"></i>
+
+                    </button>
+
+                  }
+
+
+                  @if (canDeletePrescription()) {
+
+                    <button
+                      type="button"
+                      class="btn-delete"
+                      (click)="deletePrescription(prescription)"
+                      title="Delete Prescription"
+                    >
+
+                      <i class="bi bi-trash"></i>
+
+                    </button>
+
+                  }
+
+                </div>
+
+              </td>
+
+            }
+
+          </tr>
+
+        }
+
+
+        @empty {
+
+          <tr>
+
+            <td
+              [attr.colspan]="
+                (canUpdatePrescription() ||
+                 canDeletePrescription())
+                ? 8
+                : 7
+              "
+              class="empty-message"
+            >
+
+              <i class="bi bi-file-medical"></i>
+
+              <p>
+                No prescriptions found.
+              </p>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+}

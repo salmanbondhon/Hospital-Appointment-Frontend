@@ -1,0 +1,541 @@
+<!-- =========================
+     PAGE HEADER
+========================= -->
+
+<div class="page-header">
+
+  <div>
+
+    <h1>Doctor Leaves</h1>
+
+    <p>
+
+      @if (isDoctor()) {
+
+        Manage your leave requests
+
+      }
+
+      @else if (isAdmin()) {
+
+        Manage doctor leave requests
+
+      }
+
+    </p>
+
+  </div>
+
+
+  <!-- =========================
+       ADD LEAVE
+  ========================= -->
+
+  @if (isDoctor()) {
+
+    <button
+      type="button"
+      class="btn-add"
+      (click)="openAddForm()"
+    >
+
+      <i class="bi bi-plus-lg"></i>
+
+      Request Leave
+
+    </button>
+
+  }
+
+</div>
+
+
+<!-- =========================
+     SUCCESS
+========================= -->
+
+@if (successMessage) {
+
+  <div class="alert alert-success">
+
+    <i class="bi bi-check-circle"></i>
+
+    {{ successMessage }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     ERROR
+========================= -->
+
+@if (errorMessage) {
+
+  <div class="alert alert-danger">
+
+    <i class="bi bi-exclamation-circle"></i>
+
+    {{ errorMessage }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     FORM
+========================= -->
+
+@if (showForm) {
+
+  <div class="form-card">
+
+    <div class="form-header">
+
+      <div>
+
+        <h2>
+          Request Doctor Leave
+        </h2>
+
+        <p>
+          Submit your leave request for admin approval.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="btn-close-form"
+        (click)="closeForm()"
+      >
+
+        <i class="bi bi-x-lg"></i>
+
+      </button>
+
+    </div>
+
+
+    <form
+      [formGroup]="leaveForm"
+      (ngSubmit)="createLeave()"
+    >
+
+
+      <!-- =========================
+           DATE ROW
+      ========================= -->
+
+      <div class="date-row">
+
+
+        <!-- START DATE -->
+
+        <div class="form-group">
+
+          <label>
+            Start Date
+          </label>
+
+          <input
+            type="date"
+            formControlName="startDate"
+          />
+
+
+          @if (
+            leaveForm.controls.startDate.touched &&
+            leaveForm.controls.startDate.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Start date is required.
+
+            </small>
+
+          }
+
+        </div>
+
+
+        <!-- END DATE -->
+
+        <div class="form-group">
+
+          <label>
+            End Date
+          </label>
+
+          <input
+            type="date"
+            formControlName="endDate"
+          />
+
+
+          @if (
+            leaveForm.controls.endDate.touched &&
+            leaveForm.controls.endDate.invalid
+          ) {
+
+            <small class="validation-error">
+
+              End date is required.
+
+            </small>
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           REASON
+      ========================= -->
+
+      <div class="form-group">
+
+        <label>
+          Reason
+        </label>
+
+        <textarea
+          formControlName="reason"
+          rows="4"
+          maxlength="500"
+          placeholder="Enter reason for your leave..."
+        ></textarea>
+
+
+        @if (
+          leaveForm.controls.reason.touched &&
+          leaveForm.controls.reason.invalid
+        ) {
+
+          <small class="validation-error">
+
+            Reason is required.
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- =========================
+           ACTIONS
+      ========================= -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="closeForm()"
+          [disabled]="isSaving"
+        >
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="isSaving"
+        >
+
+          @if (isSaving) {
+
+            Submitting...
+
+          }
+
+          @else {
+
+            Submit Leave Request
+
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+}
+
+
+<!-- =========================
+     LOADING
+========================= -->
+
+@if (isLoading) {
+
+  <div class="loading-container">
+
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    >
+
+      <span class="visually-hidden">
+        Loading...
+      </span>
+
+    </div>
+
+    <p>
+      Loading doctor leaves...
+    </p>
+
+  </div>
+
+}
+
+
+<!-- =========================
+     TABLE
+========================= -->
+
+@else {
+
+  <div class="table-card">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+
+          @if (isAdmin()) {
+
+            <th>Doctor</th>
+
+          }
+
+
+          <th>Start Date</th>
+
+          <th>End Date</th>
+
+          <th>Reason</th>
+
+          <th>Status</th>
+
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        @for (
+          leave of leaves;
+          track leave.id
+        ) {
+
+          <tr>
+
+
+            <!-- ID -->
+
+            <td>
+
+              {{ leave.id }}
+
+            </td>
+
+
+            <!-- DOCTOR -->
+
+            @if (isAdmin()) {
+
+              <td>
+
+                <strong>
+                  {{ leave.doctorName }}
+                </strong>
+
+              </td>
+
+            }
+
+
+            <!-- START DATE -->
+
+            <td>
+
+              {{ leave.startDate
+                | date:'dd MMM yyyy'
+              }}
+
+            </td>
+
+
+            <!-- END DATE -->
+
+            <td>
+
+              {{ leave.endDate
+                | date:'dd MMM yyyy'
+              }}
+
+            </td>
+
+
+            <!-- REASON -->
+
+            <td>
+
+              <span class="reason-text">
+
+                {{ leave.reason }}
+
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+           <td>
+
+  <span
+    class="status-badge"
+    [class]="getStatusClass(leave.isApproved)"
+  >
+
+    {{ getStatusText(leave.isApproved) }}
+
+  </span>
+
+</td>
+
+
+            <!-- ACTIONS -->
+
+            <td>
+
+              <div class="action-buttons">
+
+
+                <!-- =========================
+                     ADMIN APPROVE
+                ========================= -->
+
+                @if (
+                  isAdmin() &&
+                  !leave.isApproved
+                ) {
+
+                  <button
+                    type="button"
+                    class="btn-approve"
+                    title="Approve Leave"
+                    (click)="approveLeave(leave)"
+                  >
+
+                    <i class="bi bi-check-lg"></i>
+
+                  </button>
+
+                }
+
+
+                <!-- =========================
+                     DELETE
+                ========================= -->
+
+                @if (
+                  isAdmin() ||
+                  isDoctor()
+                ) {
+
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    title="Delete Leave"
+                    (click)="deleteLeave(leave)"
+                  >
+
+                    <i class="bi bi-trash"></i>
+
+                  </button>
+
+                }
+
+
+                <!-- =========================
+                     DOCTOR PENDING MESSAGE
+                ========================= -->
+
+                @if (
+                  isDoctor() &&
+                  !leave.isApproved
+                ) {
+
+                  <span class="pending-text">
+
+                    Waiting for approval
+
+                  </span>
+
+                }
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        }
+
+
+        <!-- =========================
+             EMPTY
+        ========================= -->
+
+        @empty {
+
+          <tr>
+
+            <td
+              [attr.colspan]="isAdmin() ? 7 : 6"
+              class="empty-message"
+            >
+
+              <i class="bi bi-calendar-x"></i>
+
+              <p>
+                No leave requests found.
+              </p>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+}

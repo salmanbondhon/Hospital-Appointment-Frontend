@@ -1,0 +1,333 @@
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-icon">
+        <i class="bi bi-hospital"></i>
+      </div>
+
+      <div>
+        <h2>Hospital</h2>
+        <span>Management System</span>
+      </div>
+    </div>
+
+   <nav class="sidebar-nav">
+
+  <!-- Dashboard - ADMIN ONLY -->
+  @if (userRole === 'Admin') {
+
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="bi bi-speedometer2"></i>
+      <span>Dashboard</span>
+    </a>
+
+  }
+
+
+  <!-- Departments - ALL -->
+  <a
+    routerLink="/departments"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-building"></i>
+    <span>Departments</span>
+  </a>
+
+
+  <!-- Doctors - ALL -->
+  <a
+    routerLink="/doctors"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-person-badge"></i>
+    <span>Doctors</span>
+  </a>
+
+
+  <!-- Patients - ADMIN ONLY -->
+  @if (userRole === 'Admin') {
+
+    <a
+      routerLink="/patients"
+      routerLinkActive="active"
+    >
+      <i class="bi bi-people"></i>
+      <span>Patients</span>
+    </a>
+
+  }
+
+
+  <!-- Appointments - ALL -->
+  <a
+    routerLink="/appointments"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-calendar-check"></i>
+    <span>Appointments</span>
+  </a>
+
+
+  <!-- Prescriptions - ALL -->
+  <a
+    routerLink="/prescriptions"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-capsule"></i>
+    <span>Prescriptions</span>
+  </a>
+
+
+  <!-- Medical Records - ALL -->
+  <a
+    routerLink="/medical-records"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-file-medical"></i>
+    <span>Medical Records</span>
+  </a>
+
+
+  <!-- Payments - ALL -->
+  <a
+    routerLink="/payments"
+    routerLinkActive="active"
+  >
+    <i class="bi bi-credit-card"></i>
+    <span>Payments</span>
+  </a>
+
+
+  <!-- Doctor Leaves - ADMIN + DOCTOR -->
+  @if (userRole === 'Admin' || userRole === 'Doctor') {
+
+    <a
+      routerLink="/doctor-leaves"
+      routerLinkActive="active"
+    >
+      <i class="bi bi-calendar-x"></i>
+      <span>Doctor Leaves</span>
+    </a>
+
+  }
+
+</nav>
+
+    <div class="sidebar-bottom">
+
+      <button class="logout-button" type="button" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Logout</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- Main -->
+  <div class="content">
+
+    <header class="header">
+
+      <div class="header-left">
+        <div>
+          <h3>Hospital Management System</h3>
+          <span>Administration Panel</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+
+        <div class="notification-wrapper">
+
+          <button class="notification-button" type="button" (click)="toggleNotifications()">
+
+            <i class="bi bi-bell"></i>
+
+            @if (unreadCount > 0) {
+
+            <span class="notification-count">
+              {{ unreadCount }}
+            </span>
+
+            }
+
+          </button>
+
+
+          @if (showNotifications) {
+
+          <div class="notification-dropdown">
+
+            <div class="notification-header">
+
+              <strong>Notifications</strong>
+
+              @if (unreadCount > 0) {
+
+              <span>
+                {{ unreadCount }} unread
+              </span>
+
+              }
+
+            </div>
+
+
+            <div class="notification-list">
+
+              @for (
+              notification of notifications;
+              track notification.id
+              ) {
+
+              <div class="notification-item" [class.unread]="!notification.isRead" (click)="markAsRead(notification)">
+
+                <div class="notification-icon">
+
+                  <i class="bi bi-bell"></i>
+
+                </div>
+
+
+                <div class="notification-content">
+
+                  <strong>
+                    {{ notification.title }}
+                  </strong>
+
+                  <p>
+                    {{ notification.message }}
+                  </p>
+
+                  <small>
+                    {{ notification.createdAt | date:'dd MMM yyyy, hh:mm a' }}
+                  </small>
+
+                </div>
+
+              </div>
+
+              }
+
+
+              @empty {
+
+              <div class="no-notifications">
+
+                <i class="bi bi-bell-slash"></i>
+
+                <p>
+                  No notifications
+                </p>
+
+              </div>
+
+              }
+
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+        <!-- =========================
+     USER PROFILE
+========================= -->
+
+        <div class="user-profile" (click)="toggleUserMenu($event)">
+
+          <!-- AVATAR -->
+
+          <div class="user-avatar">
+
+            <i class="bi bi-person"></i>
+
+          </div>
+
+
+          <!-- USER INFO -->
+
+          <div class="user-info">
+
+            <strong>
+              {{ userName }}
+            </strong>
+
+            <span>
+              {{ userRole }}
+            </span>
+
+          </div>
+
+
+          <!-- ARROW -->
+
+          <i class="bi" [class.bi-chevron-down]="!showUserMenu" [class.bi-chevron-up]="showUserMenu"></i>
+
+
+          <!-- =========================
+       USER DROPDOWN
+  ========================= -->
+
+          @if (showUserMenu) {
+
+          <div class="user-dropdown" (click)="$event.stopPropagation()">
+
+            <!-- PROFILE -->
+
+            <button type="button" class="user-dropdown-item" (click)="goToProfile()">
+
+              <i class="bi bi-person-circle"></i>
+
+              <span>
+                My Profile
+              </span>
+
+            </button>
+
+
+            <!-- LOGOUT -->
+
+            <button type="button" class="user-dropdown-item logout-item" (click)="logout()">
+
+              <i class="bi bi-box-arrow-right"></i>
+
+              <span>
+                Logout
+              </span>
+
+            </button>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <main class="main-content">
+
+      <router-outlet></router-outlet>
+
+    </main>
+
+    <app-footer></app-footer>
+
+  </div>
+
+</div>

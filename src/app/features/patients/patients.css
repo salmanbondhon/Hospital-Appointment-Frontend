@@ -1,0 +1,587 @@
+/* =========================
+   PAGE
+========================= */
+
+.patients-page {
+  width: 100%;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.page-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+}
+
+
+/* =========================
+   ADD BUTTON
+========================= */
+
+.btn-add {
+  border: none;
+  background: #0d6efd;
+  color: #ffffff;
+
+  padding: 11px 18px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  transition: 0.2s;
+}
+
+.btn-add:hover {
+  background: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   ALERT
+========================= */
+
+.alert {
+  padding: 12px 15px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+}
+
+.alert-danger {
+  background: #ffe5e5;
+
+  color: #b42318;
+
+  border: 1px solid #f5b5b5;
+}
+
+.alert-success {
+  background: #e1f7ec;
+
+  color: #087443;
+
+  border: 1px solid #a7e3c5;
+}
+
+
+/* =========================
+   FORM CARD
+========================= */
+
+.form-card {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 25px;
+
+  margin-bottom: 25px;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================
+   FORM HEADER
+========================= */
+
+.form-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 25px;
+}
+
+.form-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  color: #1e293b;
+}
+
+
+/* =========================
+   CLOSE
+========================= */
+
+.btn-close-form {
+  width: 36px;
+
+  height: 36px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #f1f5f9;
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.btn-close-form:hover {
+  background: #ffe5e5;
+
+  color: #dc3545;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #334155;
+}
+
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #1e293b;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+
+.form-group textarea {
+  resize: vertical;
+}
+
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #0d6efd;
+
+  box-shadow:
+    0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+
+/* =========================
+   OPTIONAL TEXT
+========================= */
+
+.optional {
+  font-size: 12px;
+
+  font-weight: 400;
+
+  color: #64748b;
+}
+
+
+/* =========================
+   VALIDATION
+========================= */
+
+.validation-error {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #dc3545;
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   FORM ACTIONS
+========================= */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 25px;
+}
+
+
+.btn-cancel,
+.btn-save {
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 7px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+
+.btn-cancel {
+  background: #e2e8f0;
+
+  color: #334155;
+}
+
+.btn-cancel:hover {
+  background: #cbd5e1;
+}
+
+
+.btn-save {
+  background: #0d6efd;
+
+  color: #ffffff;
+}
+
+.btn-save:hover {
+  background: #0b5ed7;
+}
+
+
+.btn-cancel:disabled,
+.btn-save:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.loading-container {
+  min-height: 400px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.loading-container p {
+  color: #64748b;
+
+  margin: 0;
+}
+
+
+/* =========================
+   TABLE CARD
+========================= */
+
+.table-card {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  overflow-x: auto;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-card table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 1100px;
+}
+
+
+/* =========================
+   TABLE HEADER
+========================= */
+
+.table-card thead {
+  background: #f8fafc;
+}
+
+.table-card th {
+  text-align: left;
+
+  padding: 15px 18px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #475569;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   TABLE BODY
+========================= */
+
+.table-card td {
+  padding: 15px 18px;
+
+  font-size: 14px;
+
+  color: #334155;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  vertical-align: middle;
+}
+
+.table-card tbody tr {
+  transition: 0.2s;
+}
+
+.table-card tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-card tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================
+   PATIENT NAME
+========================= */
+
+.table-card td strong {
+  color: #1e293b;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   BLOOD GROUP
+========================= */
+
+.table-card td:nth-child(7) {
+  font-weight: 600;
+
+  color: #dc3545;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+/* =========================
+   EDIT
+========================= */
+
+.btn-edit {
+  width: 34px;
+
+  height: 34px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #0d6efd;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  background: #e0ecff;
+
+  border-color: #0d6efd;
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+.btn-delete {
+  width: 34px;
+
+  height: 34px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #dc3545;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: 0.2s;
+}
+
+.btn-delete:hover {
+  background: #ffe5e5;
+
+  border-color: #dc3545;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty-message {
+  text-align: center;
+
+  padding: 50px !important;
+
+  color: #64748b !important;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+
+  .btn-add {
+    width: 100%;
+
+    justify-content: center;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+
+  .table-card {
+    border-radius: 8px;
+  }
+}

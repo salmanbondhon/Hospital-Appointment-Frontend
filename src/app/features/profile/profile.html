@@ -1,0 +1,821 @@
+<div class="profile-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+  ====================================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        My Profile
+      </h1>
+
+      <p>
+        View your account information
+      </p>
+
+    </div>
+
+
+     <!-- 
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="goBack()"
+    >
+
+      <i class="bi bi-arrow-left"></i>
+
+      Back to Dashboard
+
+    </button>
+
+   =====================================================
+       LOADING
+  ====================================================== -->
+
+  </div>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  @if (isLoading) {
+
+    <div class="profile-message">
+
+      <i class="bi bi-arrow-repeat"></i>
+
+      <p>
+        Loading profile...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       ERROR
+  ====================================================== -->
+
+  @if (!isLoading && errorMessage) {
+
+    <div class="alert alert-danger">
+
+      {{ errorMessage }}
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       PROFILE
+  ====================================================== -->
+
+  @if (!isLoading && profile) {
+
+    <div class="profile-card">
+
+
+      <!-- =================================================
+           PROFILE HEADER
+      ================================================== -->
+
+      <div class="profile-header">
+
+        <div class="profile-avatar">
+
+          @if (userRole === 'Doctor') {
+
+            <i class="bi bi-person-badge"></i>
+
+          }
+          @else if (userRole === 'Patient') {
+
+            <i class="bi bi-person"></i>
+
+          }
+          @else {
+
+            <i class="bi bi-shield-lock"></i>
+
+          }
+
+        </div>
+
+
+        <div class="profile-heading">
+
+          <h2>
+            {{ profile.fullName || userName || 'User' }}
+          </h2>
+
+          <span class="role-badge">
+            {{ userRole }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           BASIC INFORMATION
+      ================================================== -->
+
+      <div class="profile-information">
+
+
+        <!-- USER ID -->
+
+        <div class="info-item">
+
+          <div class="info-icon">
+
+            <i class="bi bi-person-badge"></i>
+
+          </div>
+
+          <div>
+
+            <span class="info-label">
+              User ID
+            </span>
+
+            <strong>
+              {{ profile.userId || profile.id || userId }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- FULL NAME -->
+
+        <div class="info-item">
+
+          <div class="info-icon">
+
+            <i class="bi bi-person"></i>
+
+          </div>
+
+          <div>
+
+            <span class="info-label">
+              Full Name
+            </span>
+
+            <strong>
+              {{ profile.fullName || userName }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="info-item">
+
+          <div class="info-icon">
+
+            <i class="bi bi-envelope"></i>
+
+          </div>
+
+          <div>
+
+            <span class="info-label">
+              Email
+            </span>
+
+            <strong>
+              {{ profile.email || userEmail || 'Not available' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="info-item">
+
+          <div class="info-icon">
+
+            <i class="bi bi-shield-check"></i>
+
+          </div>
+
+          <div>
+
+            <span class="info-label">
+              Role
+            </span>
+
+            <strong>
+              {{ userRole }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PATIENT INFORMATION
+        ================================================== -->
+
+        @if (userRole === 'Patient') {
+
+
+          <!-- AGE -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-calendar3"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Age
+              </span>
+
+              <strong>
+                {{ profile.age }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- GENDER -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-gender-ambiguous"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Gender
+              </span>
+
+              <strong>
+                {{ profile.gender }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- PHONE -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-telephone"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Phone Number
+              </span>
+
+              <strong>
+                {{ profile.phoneNumber }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- BLOOD GROUP -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-droplet"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Blood Group
+              </span>
+
+              <strong>
+                {{ profile.bloodGroup }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- ADDRESS -->
+
+          <div class="info-item full-width">
+
+            <div class="info-icon">
+
+              <i class="bi bi-geo-alt"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Address
+              </span>
+
+              <strong>
+                {{ profile.address }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             DOCTOR INFORMATION
+        ================================================== -->
+
+        @if (userRole === 'Doctor') {
+
+
+          <!-- SPECIALIZATION -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-heart-pulse"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Specialization
+              </span>
+
+              <strong>
+                {{ profile.specialization }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- QUALIFICATION -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-mortarboard"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Qualification
+              </span>
+
+              <strong>
+                {{ profile.qualification }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- EXPERIENCE -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-briefcase"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Experience
+              </span>
+
+              <strong>
+                {{ profile.experience }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONSULTATION FEE -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-cash-coin"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Consultation Fee
+              </span>
+
+              <strong>
+                {{ profile.consultationFee }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- DEPARTMENT -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-building"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Department
+              </span>
+
+              <strong>
+                {{ profile.departmentName || 'Not assigned' }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- AVAILABLE FROM -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-clock"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Available From
+              </span>
+
+              <strong>
+                {{ profile.availableFrom }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- AVAILABLE TO -->
+
+          <div class="info-item">
+
+            <div class="info-icon">
+
+              <i class="bi bi-clock-history"></i>
+
+            </div>
+
+            <div>
+
+              <span class="info-label">
+                Available To
+              </span>
+
+              <strong>
+                {{ profile.availableTo }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- =================================================
+           PROFILE ACTIONS
+      ================================================== -->
+
+      <div class="profile-actions">
+
+        <button
+          type="button"
+          class="change-password-button"
+          (click)="openChangePassword()"
+        >
+
+          <i class="bi bi-key"></i>
+
+          Change Password
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       CHANGE PASSWORD MODAL
+       ONLY ONE MODAL
+  ====================================================== -->
+
+  @if (showChangePassword) {
+
+    <div
+      class="modal-overlay"
+      (click)="closeChangePassword()"
+    >
+
+      <div
+        class="password-modal"
+        (click)="$event.stopPropagation()"
+      >
+
+
+        <!-- =================================================
+             MODAL HEADER
+        ================================================== -->
+
+        <div class="modal-header">
+
+          <div>
+
+            <h2>
+              Change Password
+            </h2>
+
+            <p>
+              Update your account password
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="close-button"
+            (click)="closeChangePassword()"
+            [disabled]="isChangingPassword"
+          >
+
+            <i class="bi bi-x-lg"></i>
+
+          </button>
+
+        </div>
+
+
+        <!-- =================================================
+             MODAL BODY
+        ================================================== -->
+
+        <div class="modal-body">
+
+
+          <!-- =================================================
+               SUCCESS MESSAGE
+          ================================================== -->
+
+          @if (passwordSuccessMessage) {
+
+            <div class="password-success">
+
+              <i class="bi bi-check-circle-fill"></i>
+
+              <span>
+                {{ passwordSuccessMessage }}
+              </span>
+
+            </div>
+
+          }
+
+
+          <!-- =================================================
+               ERROR MESSAGE
+          ================================================== -->
+
+          @if (passwordErrorMessage) {
+
+            <div class="password-error">
+
+              <i class="bi bi-exclamation-circle-fill"></i>
+
+              <span>
+                {{ passwordErrorMessage }}
+              </span>
+
+            </div>
+
+          }
+
+
+          <!-- =================================================
+               FORM
+          ================================================== -->
+
+          @if (!passwordSuccessMessage) {
+
+
+            <!-- CURRENT PASSWORD -->
+
+            <div class="form-group">
+
+              <label for="currentPassword">
+                Current Password
+              </label>
+
+              <input
+                id="currentPassword"
+                type="password"
+                [(ngModel)]="currentPassword"
+                placeholder="Enter current password"
+                autocomplete="current-password"
+                [disabled]="isChangingPassword"
+              >
+
+            </div>
+
+
+            <!-- NEW PASSWORD -->
+
+            <div class="form-group">
+
+              <label for="newPassword">
+                New Password
+              </label>
+
+              <input
+                id="newPassword"
+                type="password"
+                [(ngModel)]="newPassword"
+                placeholder="Enter new password"
+                autocomplete="new-password"
+                [disabled]="isChangingPassword"
+              >
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+              <label for="confirmPassword">
+                Confirm New Password
+              </label>
+
+              <input
+                id="confirmPassword"
+                type="password"
+                [(ngModel)]="confirmPassword"
+                placeholder="Confirm new password"
+                autocomplete="new-password"
+                [disabled]="isChangingPassword"
+              >
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             MODAL FOOTER
+        ================================================== -->
+
+        <div class="modal-footer">
+
+
+          <!-- CANCEL -->
+
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="closeChangePassword()"
+            [disabled]="isChangingPassword"
+          >
+
+            Cancel
+
+          </button>
+
+
+          <!-- CHANGE PASSWORD -->
+
+          @if (!passwordSuccessMessage) {
+
+            <button
+              type="button"
+              class="submit-password-button"
+              (click)="changePassword()"
+              [disabled]="isChangingPassword"
+            >
+
+              @if (isChangingPassword) {
+
+                <i class="bi bi-arrow-repeat"></i>
+
+                Changing...
+
+              }
+              @else {
+
+                <i class="bi bi-check-lg"></i>
+
+                Change Password
+
+              }
+
+            </button>
+
+          }
+          @else {
+
+            <button
+              type="button"
+              class="submit-password-button"
+              (click)="closeChangePassword()"
+            >
+
+              <i class="bi bi-check-lg"></i>
+
+              Done
+
+            </button>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

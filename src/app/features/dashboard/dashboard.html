@@ -1,0 +1,225 @@
+@if (isLoading) {
+
+  <div class="loading-container">
+
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <p>Loading dashboard...</p>
+
+  </div>
+
+}
+@else if (errorMessage) {
+
+  <div class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+}
+@else if (dashboard) {
+
+  <!-- Page Header -->
+  <div class="dashboard-header">
+
+    <div>
+      <h1>Dashboard</h1>
+      <p>Overview of your hospital management system</p>
+    </div>
+
+    <div class="date">
+      <i class="bi bi-calendar3"></i>
+      {{ today | date:'dd MMM yyyy' }}
+    </div>
+
+  </div>
+
+
+  <!-- Statistics -->
+  <div class="stats-grid">
+
+    <!-- Total Users -->
+    <div class="stat-card">
+
+      <div class="stat-icon users">
+        <i class="bi bi-people"></i>
+      </div>
+
+      <div>
+        <span>Total Users</span>
+        <h2>{{ dashboard.totalUsers }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Departments -->
+    <div class="stat-card">
+
+      <div class="stat-icon departments">
+        <i class="bi bi-building"></i>
+      </div>
+
+      <div>
+        <span>Departments</span>
+        <h2>{{ dashboard.totalDepartments }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Doctors -->
+    <div class="stat-card">
+
+      <div class="stat-icon doctors">
+        <i class="bi bi-person-badge"></i>
+      </div>
+
+      <div>
+        <span>Doctors</span>
+        <h2>{{ dashboard.totalDoctors }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Patients -->
+    <div class="stat-card">
+
+      <div class="stat-icon patients">
+        <i class="bi bi-person-hearts"></i>
+      </div>
+
+      <div>
+        <span>Patients</span>
+        <h2>{{ dashboard.totalPatients }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Total Appointments -->
+    <div class="stat-card">
+
+      <div class="stat-icon appointments">
+        <i class="bi bi-calendar-check"></i>
+      </div>
+
+      <div>
+        <span>Total Appointments</span>
+        <h2>{{ dashboard.totalAppointments }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Prescriptions -->
+    <div class="stat-card">
+
+      <div class="stat-icon prescriptions">
+        <i class="bi bi-capsule"></i>
+      </div>
+
+      <div>
+        <span>Prescriptions</span>
+        <h2>{{ dashboard.totalPrescriptions }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Doctors On Leave -->
+    <div class="stat-card">
+
+      <div class="stat-icon leave">
+        <i class="bi bi-person-x"></i>
+      </div>
+
+      <div>
+        <span>Doctors On Leave</span>
+        <h2>{{ dashboard.doctorsOnLeaveToday }}</h2>
+      </div>
+
+    </div>
+
+
+    <!-- Today's Appointments -->
+    <div class="stat-card">
+
+      <div class="stat-icon today">
+        <i class="bi bi-calendar-day"></i>
+      </div>
+
+      <div>
+        <span>Today's Appointments</span>
+        <h2>{{ dashboard.todayAppointments }}</h2>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Appointment Overview -->
+  <div class="section-title">
+    <h2>Appointment Overview</h2>
+  </div>
+
+
+  <div class="appointment-grid">
+
+    <!-- Pending -->
+    <div class="status-card pending">
+
+      <i class="bi bi-hourglass-split"></i>
+
+      <div>
+        <span>Pending</span>
+        <strong>{{ dashboard.pendingAppointments }}</strong>
+      </div>
+
+    </div>
+
+
+    <!-- Approved -->
+    <div class="status-card approved">
+
+      <i class="bi bi-check-circle"></i>
+
+      <div>
+        <span>Approved</span>
+        <strong>{{ dashboard.approvedAppointments }}</strong>
+      </div>
+
+    </div>
+
+
+    <!-- Completed -->
+    <div class="status-card completed">
+
+      <i class="bi bi-check2-all"></i>
+
+      <div>
+        <span>Completed</span>
+        <strong>{{ dashboard.completedAppointments }}</strong>
+      </div>
+
+    </div>
+
+
+    <!-- Cancelled -->
+    <div class="status-card cancelled">
+
+      <i class="bi bi-x-circle"></i>
+
+      <div>
+        <span>Cancelled</span>
+        <strong>{{ dashboard.cancelledAppointments }}</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+}

@@ -1,0 +1,839 @@
+<div class="login-page">
+
+  <!-- =====================================================
+       LEFT SIDE
+  ====================================================== -->
+
+  <div class="welcome-section">
+
+    <div class="welcome-overlay">
+
+      <div class="welcome-content">
+
+        <p class="welcome-small">
+          Welcome to
+        </p>
+
+        <h1>
+          Hospital Management
+          <br>
+          System
+        </h1>
+
+        <div class="welcome-line"></div>
+
+        <p class="welcome-text">
+          Your health is our priority.
+          <br>
+          We are here to care for you.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       RIGHT SIDE
+  ====================================================== -->
+
+  <div class="login-section">
+
+    <div class="login-card">
+
+      <!-- =================================================
+           HOSPITAL LOGO
+      ================================================== -->
+
+      <div class="hospital-logo">
+        <i class="bi bi-hospital"></i>
+      </div>
+
+      <h2>
+        HOSPITAL
+      </h2>
+
+      <span class="system-name">
+        MANAGEMENT SYSTEM
+      </span>
+
+
+      <!-- =================================================
+           LOGIN MODE
+      ================================================== -->
+
+      @if (!isRegisterMode) {
+
+        <h3 class="form-title">
+          Login
+        </h3>
+
+        <p class="form-subtitle">
+          Please login to your account
+        </p>
+
+
+        <!-- =========================
+             LOGIN FORM
+        ========================== -->
+
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onLogin()"
+        >
+
+
+          <!-- =========================
+               EMAIL
+          ========================== -->
+
+          <div class="form-group">
+
+            <label>
+              Email
+            </label>
+
+            <div class="input-wrapper">
+
+              <i class="bi bi-envelope"></i>
+
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="Enter your email"
+              >
+
+            </div>
+
+
+            <!-- EMAIL REQUIRED -->
+
+            @if (
+              loginForm.controls.email.touched &&
+              loginForm.controls.email.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Email is required.
+              </small>
+
+            }
+
+
+            <!-- EMAIL FORMAT -->
+
+            @if (
+              loginForm.controls.email.touched &&
+              loginForm.controls.email.hasError('email')
+            ) {
+
+              <small class="text-danger">
+                Please enter a valid email address.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =========================
+               PASSWORD
+          ========================== -->
+
+          <div class="form-group">
+
+            <label>
+              Password
+            </label>
+
+            <div class="input-wrapper">
+
+              <i class="bi bi-lock"></i>
+
+              <input
+                type="password"
+                formControlName="password"
+                placeholder="Enter your password"
+              >
+
+            </div>
+
+
+            <!-- PASSWORD REQUIRED -->
+
+            @if (
+              loginForm.controls.password.touched &&
+              loginForm.controls.password.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Password is required.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =========================
+               FORGOT PASSWORD
+          ========================== -->
+
+          <div class="forgot-password">
+
+            <button
+              type="button"
+              (click)="goToForgotPassword()"
+            >
+              Forgot Password?
+            </button>
+
+          </div>
+
+
+          <!-- =========================
+               LOGIN BUTTON
+          ========================== -->
+
+          <button
+            class="login-button"
+            type="submit"
+            [disabled]="isLoading"
+          >
+
+            @if (isLoading) {
+
+              Logging in...
+
+            } @else {
+
+              Login
+
+            }
+
+          </button>
+
+        </form>
+
+
+        <!-- =========================
+             LOGIN ERROR
+        ========================== -->
+
+        @if (errorMessage) {
+
+          <div class="alert alert-danger mt-3">
+
+            {{ errorMessage }}
+
+          </div>
+
+        }
+
+
+        <!-- =========================
+             REGISTER LINK
+        ========================== -->
+
+        <div class="register-section">
+
+          <span>
+            Don't have an account?
+          </span>
+
+          <button
+            type="button"
+            (click)="showRegister()"
+          >
+            Register
+          </button>
+
+        </div>
+
+      }
+
+
+      <!-- =================================================
+           REGISTER MODE
+      ================================================== -->
+
+      @else {
+
+        <h3 class="form-title">
+          Create Patient Account
+        </h3>
+
+
+        <!-- =========================
+             REGISTER FORM
+        ========================== -->
+
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="onRegister()"
+        >
+
+
+          <!-- =================================================
+               FULL NAME
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="fullName"
+              placeholder="Enter your full name"
+            >
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.fullName.touched &&
+              registerForm.controls.fullName.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Full name is required.
+              </small>
+
+            }
+
+
+            <!-- INVALID CHARACTERS -->
+
+            @if (
+              registerForm.controls.fullName.touched &&
+              registerForm.controls.fullName.hasError('pattern')
+            ) {
+
+              <small class="text-danger">
+                Full name can contain only letters, spaces,
+                apostrophes, dots, and hyphens.
+              </small>
+
+            }
+
+
+            <!-- MAX LENGTH -->
+
+            @if (
+              registerForm.controls.fullName.touched &&
+              registerForm.controls.fullName.hasError('maxlength')
+            ) {
+
+              <small class="text-danger">
+                Full name cannot exceed 100 characters.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               EMAIL
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Email
+            </label>
+
+            <input
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="Enter your email"
+            >
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.email.touched &&
+              registerForm.controls.email.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Email is required.
+              </small>
+
+            }
+
+
+            <!-- INVALID EMAIL -->
+
+            @if (
+              registerForm.controls.email.touched &&
+              registerForm.controls.email.hasError('email')
+            ) {
+
+              <small class="text-danger">
+                Please enter a valid email address.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               PASSWORD
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Password
+            </label>
+
+            <input
+              type="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Minimum 6 characters"
+            >
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.password.touched &&
+              registerForm.controls.password.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Password is required.
+              </small>
+
+            }
+
+
+            <!-- MINIMUM LENGTH -->
+
+            @if (
+              registerForm.controls.password.touched &&
+              registerForm.controls.password.hasError('minlength')
+            ) {
+
+              <small class="text-danger">
+                Password must be at least 6 characters.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               CONFIRM PASSWORD
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Confirm Password
+            </label>
+
+            <input
+              type="password"
+              class="form-control"
+              formControlName="confirmPassword"
+              placeholder="Confirm your password"
+            >
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.confirmPassword.touched &&
+              registerForm.controls.confirmPassword.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Please confirm your password.
+              </small>
+
+            }
+
+
+            <!-- PASSWORD MISMATCH -->
+
+            @if (passwordsDoNotMatch()) {
+
+              <small class="text-danger">
+                Passwords do not match.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               AGE + GENDER
+          ================================================== -->
+
+          <div class="form-row">
+
+
+            <!-- =========================
+                 AGE
+            ========================== -->
+
+            <div class="form-group">
+
+              <label>
+                Age
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                formControlName="age"
+                min="1"
+                max="120"
+              >
+
+
+              <!-- REQUIRED -->
+
+              @if (
+                registerForm.controls.age.touched &&
+                registerForm.controls.age.hasError('required')
+              ) {
+
+                <small class="text-danger">
+                  Age is required.
+                </small>
+
+              }
+
+
+              <!-- MIN -->
+
+              @if (
+                registerForm.controls.age.touched &&
+                registerForm.controls.age.hasError('min')
+              ) {
+
+                <small class="text-danger">
+                  Age must be at least 1.
+                </small>
+
+              }
+
+
+              <!-- MAX -->
+
+              @if (
+                registerForm.controls.age.touched &&
+                registerForm.controls.age.hasError('max')
+              ) {
+
+                <small class="text-danger">
+                  Age cannot be more than 120.
+                </small>
+
+              }
+
+            </div>
+
+
+            <!-- =========================
+                 GENDER
+            ========================== -->
+
+            <div class="form-group">
+
+              <label>
+                Gender
+              </label>
+
+              <select
+                class="form-select"
+                formControlName="gender"
+              >
+
+                <option value="">
+                  Select Gender
+                </option>
+
+                <option value="Male">
+                  Male
+                </option>
+
+                <option value="Female">
+                  Female
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+
+              </select>
+
+
+              <!-- REQUIRED -->
+
+              @if (
+                registerForm.controls.gender.touched &&
+                registerForm.controls.gender.hasError('required')
+              ) {
+
+                <small class="text-danger">
+                  Please select your gender.
+                </small>
+
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               PHONE NUMBER
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Phone Number
+            </label>
+
+            <input
+              type="tel"
+              class="form-control"
+              formControlName="phoneNumber"
+              placeholder="01XXXXXXXXX"
+              maxlength="11"
+            >
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.phoneNumber.touched &&
+              registerForm.controls.phoneNumber.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Phone number is required.
+              </small>
+
+            }
+
+
+            <!-- INVALID PHONE -->
+
+            @if (
+              registerForm.controls.phoneNumber.touched &&
+              registerForm.controls.phoneNumber.hasError('pattern')
+            ) {
+
+              <small class="text-danger">
+                Enter a valid Bangladesh mobile number
+                (e.g. 01712345678).
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               ADDRESS
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Address
+            </label>
+
+            <textarea
+              class="form-control"
+              formControlName="address"
+              rows="2"
+              placeholder="Enter your address"
+            ></textarea>
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.address.touched &&
+              registerForm.controls.address.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Address is required.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               BLOOD GROUP
+          ================================================== -->
+
+          <div class="form-group">
+
+            <label>
+              Blood Group
+            </label>
+
+            <select
+              class="form-select"
+              formControlName="bloodGroup"
+            >
+
+              <option value="">
+                Select Blood Group
+              </option>
+
+              <option value="A+">
+                A+
+              </option>
+
+              <option value="A-">
+                A-
+              </option>
+
+              <option value="B+">
+                B+
+              </option>
+
+              <option value="B-">
+                B-
+              </option>
+
+              <option value="AB+">
+                AB+
+              </option>
+
+              <option value="AB-">
+                AB-
+              </option>
+
+              <option value="O+">
+                O+
+              </option>
+
+              <option value="O-">
+                O-
+              </option>
+
+            </select>
+
+
+            <!-- REQUIRED -->
+
+            @if (
+              registerForm.controls.bloodGroup.touched &&
+              registerForm.controls.bloodGroup.hasError('required')
+            ) {
+
+              <small class="text-danger">
+                Please select your blood group.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- =================================================
+               CREATE ACCOUNT BUTTON
+          ================================================== -->
+
+          <button
+            class="login-button"
+            type="submit"
+            [disabled]="isLoading"
+          >
+
+            @if (isLoading) {
+
+              Creating account...
+
+            } @else {
+
+              Create Patient Account
+
+            }
+
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             REGISTER ERROR
+        ================================================== -->
+
+        @if (errorMessage) {
+
+          <div class="alert alert-danger mt-3">
+
+            {{ errorMessage }}
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             REGISTER SUCCESS
+        ================================================== -->
+
+        @if (successMessage) {
+
+          <div class="alert alert-success mt-3">
+
+            {{ successMessage }}
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             BACK TO LOGIN
+        ================================================== -->
+
+        <div class="register-section">
+
+          <span>
+            Already have an account?
+          </span>
+
+          <button
+            type="button"
+            (click)="showLogin()"
+          >
+            Login
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</div>

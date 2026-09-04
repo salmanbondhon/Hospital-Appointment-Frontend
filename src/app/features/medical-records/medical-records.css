@@ -1,0 +1,514 @@
+:host {
+  display: block;
+}
+
+
+/* =================================================
+   PAGE HEADER
+================================================= */
+
+.page-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+
+  font-weight: 600;
+
+  color: #1e293b;
+}
+
+.page-header p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =================================================
+   ALERTS
+================================================= */
+
+.alert {
+  padding: 12px 15px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+}
+
+.alert-success {
+  background: #d1e7dd;
+
+  color: #0f5132;
+
+  border: 1px solid #badbcc;
+}
+
+.alert-danger {
+  background: #f8d7da;
+
+  color: #842029;
+
+  border: 1px solid #f5c2c7;
+}
+
+
+/* =================================================
+   PATIENT SELECTOR
+================================================= */
+
+.patient-selector-card {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+  margin-bottom: 20px;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #334155;
+}
+
+.form-group select {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 11px 13px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #1e293b;
+
+  font-size: 14px;
+
+  outline: none;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.form-group select:focus {
+  border-color: #0d6efd;
+
+  box-shadow:
+    0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.form-group select:disabled {
+  background: #f8fafc;
+
+  cursor: not-allowed;
+}
+
+
+/* =================================================
+   INFO MESSAGE
+================================================= */
+
+.info-message {
+  display: block;
+
+  margin-top: 7px;
+
+  font-size: 12px;
+
+  color: #64748b;
+}
+
+
+/* =================================================
+   SELECTED PATIENT
+================================================= */
+
+.selected-patient {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 16px 20px;
+
+  margin-bottom: 20px;
+}
+
+.selected-patient > i {
+  font-size: 30px;
+
+  color: #0d6efd;
+}
+
+.selected-patient div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.selected-patient strong {
+  font-size: 12px;
+
+  color: #64748b;
+
+  font-weight: 500;
+
+  text-transform: uppercase;
+}
+
+.selected-patient span {
+  font-size: 16px;
+
+  color: #1e293b;
+
+  font-weight: 600;
+}
+
+
+/* =================================================
+   LOADING
+================================================= */
+
+.loading-container {
+  min-height: 350px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 15px;
+
+  color: #64748b;
+}
+
+.loading-container .spinner-border {
+  width: 2.5rem;
+
+  height: 2.5rem;
+}
+
+
+/* =================================================
+   RECORDS CONTAINER
+================================================= */
+
+.records-container {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* =================================================
+   RECORD CARD
+================================================= */
+
+.record-card {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 24px;
+
+  transition: 0.2s;
+}
+
+.record-card:hover {
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =================================================
+   RECORD HEADER
+================================================= */
+
+.record-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 20px;
+
+  padding-bottom: 18px;
+
+  margin-bottom: 20px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.record-header h2 {
+  margin: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  color: #1e293b;
+}
+
+.record-header h2 i {
+  color: #0d6efd;
+}
+
+.record-header p {
+  margin: 6px 0 0;
+
+  font-size: 13px;
+
+  color: #64748b;
+}
+
+.record-date {
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: #eff6ff;
+
+  color: #0d6efd;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+/* =================================================
+   RECORD SECTION
+================================================= */
+
+.record-section {
+  display: grid;
+
+  grid-template-columns: 160px 1fr;
+
+  gap: 20px;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.record-section:last-child {
+  border-bottom: none;
+
+  padding-bottom: 0;
+}
+
+.section-label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #64748b;
+}
+
+.section-label i {
+  font-size: 15px;
+
+  color: #0d6efd;
+}
+
+.section-value {
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: #334155;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+}
+
+
+/* =================================================
+   MEDICINES
+================================================= */
+
+.medicine-text {
+  color: #334155;
+
+  line-height: 1.7;
+}
+
+
+/* =================================================
+   NOTES
+================================================= */
+
+.notes-text {
+  color: #64748b;
+
+  line-height: 1.7;
+}
+
+
+/* =================================================
+   EMPTY MESSAGE
+================================================= */
+
+.empty-message {
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  padding: 60px 20px;
+
+  text-align: center;
+
+  color: #94a3b8;
+}
+
+.empty-message i {
+  display: block;
+
+  margin-bottom: 12px;
+
+  font-size: 42px;
+}
+
+.empty-message h3 {
+  margin: 0 0 8px;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  color: #475569;
+}
+
+.empty-message p {
+  margin: 0;
+
+  font-size: 14px;
+
+  color: #64748b;
+}
+
+
+/* =================================================
+   RESPONSIVE
+================================================= */
+
+@media (max-width: 768px) {
+
+  .page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+
+  .patient-selector-card {
+    padding: 16px;
+  }
+
+
+  .record-card {
+    padding: 18px;
+  }
+
+
+  .record-header {
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+
+  .record-date {
+    align-self: flex-start;
+  }
+
+
+  .record-section {
+    grid-template-columns: 1fr;
+
+    gap: 6px;
+  }
+
+
+  .section-label {
+    font-size: 12px;
+  }
+
+
+  .section-value {
+    font-size: 14px;
+  }
+
+}

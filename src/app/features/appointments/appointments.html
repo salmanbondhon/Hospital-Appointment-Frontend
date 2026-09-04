@@ -1,0 +1,657 @@
+<!-- =========================
+     PAGE HEADER
+========================= -->
+
+<div class="page-header">
+
+  <div>
+
+    <h1>Appointments</h1>
+
+    <p>
+
+      @if (isPatient()) {
+
+        Book and view your appointments
+
+      }
+
+      @else if (isDoctor()) {
+
+        Manage your patient appointments
+
+      }
+
+      @else {
+
+        Manage hospital appointments
+
+      }
+
+    </p>
+
+  </div>
+
+
+  @if (canCreateAppointment()) {
+
+    <button
+      type="button"
+      class="btn-add"
+      (click)="openAddForm()"
+    >
+
+      <i class="bi bi-plus-lg"></i>
+
+      @if (isPatient()) {
+
+        Book Appointment
+
+      }
+
+      @else {
+
+        New Appointment
+
+      }
+
+    </button>
+
+  }
+
+</div>
+
+
+<!-- =========================
+     SUCCESS
+========================= -->
+
+@if (successMessage) {
+
+  <div class="alert alert-success">
+
+    {{ successMessage }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     ERROR
+========================= -->
+
+@if (errorMessage) {
+
+  <div class="alert alert-danger">
+
+    {{ errorMessage }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     FORM
+========================= -->
+
+@if (showForm) {
+
+  <div class="form-card">
+
+    <div class="form-header">
+
+      <h2>
+        New Appointment
+      </h2>
+
+      <button
+        type="button"
+        class="btn-close-form"
+        (click)="closeForm()"
+      >
+
+        <i class="bi bi-x-lg"></i>
+
+      </button>
+
+    </div>
+
+
+    <form
+      [formGroup]="appointmentForm"
+      (ngSubmit)="createAppointment()"
+    >
+
+
+      <!-- =========================
+           PATIENT
+           ADMIN ONLY
+      ========================== -->
+
+      @if (isAdmin()) {
+
+        <div class="form-group">
+
+          <label>
+            Patient
+          </label>
+
+          <!--
+            You need to load patients for Admin.
+            See the TypeScript change below.
+          -->
+
+          <select
+            formControlName="patientId"
+          >
+
+            <option [ngValue]="0">
+              Select Patient
+            </option>
+
+            @for (
+              patient of patients;
+              track patient.id
+            ) {
+
+              <option
+                [ngValue]="patient.id"
+              >
+
+                {{ patient.fullName }}
+
+              </option>
+
+            }
+
+          </select>
+
+
+          @if (
+            appointmentForm.controls.patientId.touched &&
+            appointmentForm.controls.patientId.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Please select a patient.
+
+            </small>
+
+          }
+
+        </div>
+
+      }
+
+
+      <!-- =========================
+           DOCTOR
+      ========================== -->
+
+      <div class="form-group">
+
+        <label>
+          Doctor
+        </label>
+
+        <select
+          formControlName="doctorId"
+        >
+
+          <option [ngValue]="0">
+            Select Doctor
+          </option>
+
+          @for (
+            doctor of doctors;
+            track doctor.id
+          ) {
+
+            <option
+              [ngValue]="doctor.id"
+            >
+
+              {{ doctor.fullName }}
+              -
+              {{ doctor.specialization }}
+
+            </option>
+
+          }
+
+        </select>
+
+
+        @if (
+          appointmentForm.controls.doctorId.touched &&
+          appointmentForm.controls.doctorId.invalid
+        ) {
+
+          <small class="validation-error">
+
+            Please select a doctor.
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- =========================
+           DATE
+      ========================== -->
+
+      <div class="form-group">
+
+        <label>
+          Appointment Date & Time
+        </label>
+
+        <input
+          type="datetime-local"
+          formControlName="appointmentDate"
+        />
+
+
+        @if (
+          appointmentForm.controls.appointmentDate.touched &&
+          appointmentForm.controls.appointmentDate.invalid
+        ) {
+
+          <small class="validation-error">
+
+            Appointment date and time is required.
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- =========================
+           PROBLEM
+      ========================== -->
+
+      <div class="form-group">
+
+        <label>
+          Problem Description
+        </label>
+
+        <textarea
+          formControlName="problemDescription"
+          rows="4"
+          placeholder="Describe your problem..."
+        ></textarea>
+
+
+        @if (
+          appointmentForm.controls.problemDescription.touched &&
+          appointmentForm.controls.problemDescription.invalid
+        ) {
+
+          <small class="validation-error">
+
+            Problem description is required.
+
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- =========================
+           BUTTONS
+      ========================== -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="closeForm()"
+          [disabled]="isSaving"
+        >
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="isSaving"
+        >
+
+          @if (isSaving) {
+
+            Saving...
+
+          }
+
+          @else {
+
+            Create Appointment
+
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+}
+
+
+<!-- =========================
+     LOADING
+========================= -->
+
+@if (isLoading) {
+
+  <div class="loading-container">
+
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    >
+
+      <span class="visually-hidden">
+        Loading...
+      </span>
+
+    </div>
+
+    <p>
+      Loading appointments...
+    </p>
+
+  </div>
+
+}
+
+
+<!-- =========================
+     TABLE
+========================= -->
+
+@else {
+
+  <div class="table-card">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+          <th>Doctor</th>
+
+
+          @if (!isPatient()) {
+
+            <th>Patient</th>
+
+          }
+
+
+          <th>Date & Time</th>
+
+          <th>Problem</th>
+
+          <th>Status</th>
+
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        @for (
+          appointment of appointments;
+          track appointment.id
+        ) {
+
+          <tr>
+
+            <!-- ID -->
+
+            <td>
+              {{ appointment.id }}
+            </td>
+
+
+            <!-- DOCTOR -->
+
+            <td>
+
+              <strong>
+                {{ appointment.doctorName }}
+              </strong>
+
+            </td>
+
+
+            <!-- PATIENT -->
+
+            @if (!isPatient()) {
+
+              <td>
+                {{ appointment.patientName }}
+              </td>
+
+            }
+
+
+            <!-- DATE -->
+
+            <td>
+
+              {{ appointment.appointmentDate
+                | date:'dd MMM yyyy, hh:mm a'
+              }}
+
+            </td>
+
+
+            <!-- PROBLEM -->
+
+            <td>
+
+              <span class="problem-text">
+
+                {{ appointment.problemDescription }}
+
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [class]="getStatusClass(appointment.status)"
+              >
+
+                {{ getStatusText(appointment.status) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTIONS -->
+
+            <td>
+
+              <div class="action-buttons">
+
+
+                <!-- APPROVE -->
+
+                @if (
+                  canApprove() &&
+                  appointment.status ===
+                    AppointmentStatus.Pending
+                ) {
+
+                  <button
+                    type="button"
+                    class="btn-approve"
+                    (click)="approveAppointment(appointment)"
+                    title="Approve"
+                  >
+
+                    <i class="bi bi-check-lg"></i>
+
+                  </button>
+
+                }
+
+
+                <!-- COMPLETE -->
+
+                @if (
+                  canComplete() &&
+                  appointment.status ===
+                    AppointmentStatus.Approved
+                ) {
+
+                  <button
+                    type="button"
+                    class="btn-complete"
+                    (click)="completeAppointment(appointment)"
+                    title="Complete"
+                  >
+
+                    <i class="bi bi-check2-all"></i>
+
+                  </button>
+
+                }
+
+
+                <!-- CANCEL -->
+
+                @if (
+                  (
+                    canCancel() ||
+                    isPatient()
+                  )
+                  &&
+                  (
+                    appointment.status ===
+                      AppointmentStatus.Pending
+                    ||
+                    appointment.status ===
+                      AppointmentStatus.Approved
+                  )
+                ) {
+
+                  <button
+                    type="button"
+                    class="btn-cancel-action"
+                    (click)="cancelAppointment(appointment)"
+                    title="Cancel"
+                  >
+
+                    <i class="bi bi-x-lg"></i>
+
+                  </button>
+
+                }
+
+
+                <!-- DELETE -->
+
+                @if (canDelete()) {
+
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    (click)="deleteAppointment(appointment)"
+                    title="Delete"
+                  >
+
+                    <i class="bi bi-trash"></i>
+
+                  </button>
+
+                }
+
+
+                <!-- PATIENT STATUS -->
+
+                @if (
+                  isPatient() &&
+                  appointment.status ===
+                    AppointmentStatus.Pending
+                ) {
+
+                  <span
+                    class="patient-status-text"
+                  >
+
+                    Waiting for approval
+
+                  </span>
+
+                }
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        }
+
+
+        @empty {
+
+          <tr>
+
+            <td
+              [attr.colspan]="
+                isPatient() ? 6 : 7
+              "
+              class="empty-message"
+            >
+
+              <i class="bi bi-calendar-x"></i>
+
+              <p>
+                No appointments found.
+              </p>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+}

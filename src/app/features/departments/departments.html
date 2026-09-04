@@ -1,0 +1,393 @@
+<div class="departments-page">
+
+
+  <!-- =========================
+       PAGE HEADER
+  ========================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>Departments</h1>
+
+      <p>
+        @if (userRole === 'Admin') {
+          Manage hospital departments
+        } @else {
+          View hospital departments
+        }
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         ADD DEPARTMENT
+         ADMIN ONLY
+    ========================== -->
+
+    @if (userRole === 'Admin') {
+
+      <button
+        class="btn-add"
+        type="button"
+        (click)="openAddForm()"
+      >
+
+        <i class="bi bi-plus-lg"></i>
+
+        Add Department
+
+      </button>
+
+    }
+
+  </div>
+
+
+
+  <!-- =========================
+       SUCCESS MESSAGE
+  ========================== -->
+
+  @if (successMessage) {
+
+    <div class="alert alert-success">
+
+      {{ successMessage }}
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       ADD / EDIT FORM
+       ADMIN ONLY
+  ========================== -->
+
+  @if (userRole === 'Admin' && showForm) {
+
+    <div class="form-card">
+
+      <div class="form-header">
+
+        <h2>
+          {{
+            editingDepartmentId === null
+              ? 'Add Department'
+              : 'Edit Department'
+          }}
+        </h2>
+
+
+        <button
+          type="button"
+          class="btn-close-form"
+          (click)="closeForm()"
+        >
+
+          <i class="bi bi-x-lg"></i>
+
+        </button>
+
+      </div>
+
+
+      <form
+        [formGroup]="departmentForm"
+        (ngSubmit)="saveDepartment()"
+      >
+
+
+        <!-- =========================
+             NAME
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Department Name
+          </label>
+
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Enter department name"
+          />
+
+
+          @if (
+            departmentForm.controls.name.touched &&
+            departmentForm.controls.name.invalid
+          ) {
+
+            <small class="validation-error">
+
+              Department name is required.
+
+            </small>
+
+          }
+
+        </div>
+
+
+
+        <!-- =========================
+             DESCRIPTION
+        ========================== -->
+
+        <div class="form-group">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            formControlName="description"
+            rows="4"
+            placeholder="Enter department description"
+          ></textarea>
+
+        </div>
+
+
+
+        <!-- =========================
+             BUTTONS
+        ========================== -->
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="closeForm()"
+            [disabled]="isSaving"
+          >
+
+            Cancel
+
+          </button>
+
+
+          <button
+            type="submit"
+            class="btn-save"
+            [disabled]="isSaving"
+          >
+
+            @if (isSaving) {
+
+              Saving...
+
+            } @else {
+
+              {{
+                editingDepartmentId === null
+                  ? 'Save Department'
+                  : 'Update Department'
+              }}
+
+            }
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       ERROR
+  ========================== -->
+
+  @if (errorMessage) {
+
+    <div class="alert alert-danger">
+
+      {{ errorMessage }}
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (isLoading) {
+
+    <div class="loading-container">
+
+      <div
+        class="spinner-border text-primary"
+        role="status"
+      >
+
+        <span class="visually-hidden">
+          Loading...
+        </span>
+
+      </div>
+
+      <p>
+        Loading departments...
+      </p>
+
+    </div>
+
+  }
+
+
+
+  <!-- =========================
+       TABLE
+  ========================== -->
+
+  @else {
+
+    <div class="table-card">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              #
+            </th>
+
+            <th>
+              Department Name
+            </th>
+
+            <th>
+              Description
+            </th>
+
+
+            <!-- ACTIONS ONLY FOR ADMIN -->
+
+            @if (userRole === 'Admin') {
+
+              <th>
+                Actions
+              </th>
+
+            }
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            department of departments;
+            track department.id
+          ) {
+
+            <tr>
+
+              <td>
+                {{ department.id }}
+              </td>
+
+
+              <td>
+
+                <strong>
+                  {{ department.name }}
+                </strong>
+
+              </td>
+
+
+              <td>
+
+                {{ department.description || 'No description' }}
+
+              </td>
+
+
+              <!-- =========================
+                   ADMIN ACTIONS
+              ========================== -->
+
+              @if (userRole === 'Admin') {
+
+                <td>
+
+                  <!-- EDIT -->
+
+                  <button
+                    type="button"
+                    class="btn-edit"
+                    (click)="editDepartment(department)"
+                  >
+
+                    <i class="bi bi-pencil"></i>
+
+                  </button>
+
+
+                  <!-- DELETE -->
+
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    (click)="deleteDepartment(department)"
+                  >
+
+                    <i class="bi bi-trash"></i>
+
+                  </button>
+
+                </td>
+
+              }
+
+            </tr>
+
+          }
+
+
+          @empty {
+
+            <tr>
+
+              <td
+                [attr.colspan]="userRole === 'Admin' ? 4 : 3"
+                class="empty-message"
+              >
+
+                No departments found.
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</div>
