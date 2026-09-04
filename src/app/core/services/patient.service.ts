@@ -13,7 +13,7 @@ import {
 
 import {
   environment
-} from '../../../environments/environment.development';
+} from '../../../environments/environment';
 
 import {
   Patient
